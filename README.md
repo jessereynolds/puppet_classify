@@ -38,7 +38,7 @@ git clone git://git.example/foo/compliance_tests.git
 
 # check any module for compliance with your tests
 cd compliance_tests
-puppet_comply check --forge puppetlabs/ntp # or specify --git git url, branch, tag, ... something
+puppet_comply check --forge-module puppetlabs/motd
 ```
 
 Uses [librarian-puppet](https://github.com/voxpupuli/librarian-puppet) to resolve and install dependencies declared in metadata.json from the Puppet Forge.
