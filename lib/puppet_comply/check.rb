@@ -19,9 +19,10 @@ module PuppetComply
 
     def self.download_forge_module(forge_module)
       modules_dir = File.join(Dir.pwd, 'modules')
-      unless File.exist?(modules_dir)
-        Dir.mkdir(modules_dir)
+      if File.exist?(modules_dir)
+        FileUtils.rm_rf(modules_dir)
       end
+      Dir.mkdir(modules_dir)
 
       system("bundle exec puppet module install #{forge_module} --target-dir #{modules_dir}")
     end
@@ -33,11 +34,20 @@ module PuppetComply
     def self.execute_rspec(module_path)
       Dir.chdir(module_path) do
         Bundler.with_clean_env do
+          system('bundle install && bundle exec rake spec_prep')
           if File.directory?('spec/fixtures/modules')
-            FileUtils.rm_rf('spec/fixtures/modules')
+            Dir.chdir('spec/fixtures/modules') do
+              Dir.glob('../../../../*').each do |path|
+                next if ['.', '..'].include?(path)
+                next if File.exist?(File.basename(path))
+                puts "symlinking #{path} to #{File.basename(path)}"
+                FileUtils.ln_s(path, File.basename(path))
+              end
+            end
+          else
+            raise 'oh no'
           end
-          FileUtils.ln_s('../../../.', 'spec/fixtures/modules')
-          system('bundle install && bundle exec rake spec')
+          system('bundle exec rake spec')
         end
       end
     end
