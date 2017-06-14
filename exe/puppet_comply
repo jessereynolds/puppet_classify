@@ -1,1 +1,38 @@
-puts "hello world"
+#!/usr/bin/env ruby
+require 'escort'
+
+# display help if nothing specified
+ARGV.push('-h') if ARGV.empty?
+
+Escort::App.create do |app|
+  app.version PuppetComply::VERSION
+  app.summary "Puppet Comply"
+  app.description "Test your puppet code complies with stuffs"
+
+  app.options do |opts|
+    # opts.opt(:keep_container,
+    #   'Leave container running?',
+    #   :long     => '--keep-container',
+    #   :type     => :boolean,
+    #   :default  => false,
+    # )
+  end
+
+  app.command :check do |command|
+    command.summary "Perform checks"
+    command.description "write more detail here"
+    command.action do |options, arguments|
+      # PDQTest::Emoji.disable(options[:global][:options][:disable_emoji])
+      #
+      # PDQTest::Instance.set_keep_container(options[:global][:options][:keep_container])
+      # PDQTest::Core.run([
+      #   lambda {PDQTest::Syntax.puppet},
+      #   lambda {PDQTest::Lint.puppet},
+      #   lambda {PDQTest::Rspec.run},
+      #   lambda {PDQTest::Instance.run},
+      # ])
+    end
+  end
+
+
+end
