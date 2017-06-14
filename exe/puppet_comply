@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 require 'escort'
+require 'puppet_comply/check'
 
 # display help if nothing specified
 ARGV.push('-h') if ARGV.empty?
@@ -21,7 +22,18 @@ Escort::App.create do |app|
   app.command :check do |command|
     command.summary "Perform checks"
     command.description "write more detail here"
+    command.options do |opts|
+      opts.opt(:forge,
+               'Specify a forge module to test, eg puppetlabs/apache',
+               :long => '--forge',
+               :type => :string,
+               :default => nil,
+              )
+    end
     command.action do |options, arguments|
+      forge = options[:global][:commands][:check][:options][:forge]
+      PuppetComply::Check.run(forge: forge)
+
       # PDQTest::Emoji.disable(options[:global][:options][:disable_emoji])
       #
       # PDQTest::Instance.set_keep_container(options[:global][:options][:keep_container])
