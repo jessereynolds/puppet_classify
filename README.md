@@ -1,8 +1,10 @@
 # PuppetComply
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/puppet_comply`. To experiment with that code, run `bin/console` for an interactive prompt.
+## WARNING
 
-TODO: Delete this and the text above, and describe your gem
+This is a work in progress and will probably cause you to burst into flames. Use at your own risk.
+
+This gem seeks to provide a mechamism to test arbritrary Puppet modules for compliance against some security spec.
 
 ## Installation
 
@@ -22,7 +24,25 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Initialise a new set of compliace tests:
+
+```
+puppet_comply init
+```
+
+Add that resulting directory to a git repo so that you can use it as follows:
+
+```
+# download your general purpose compliance tests
+git clone git://git.example/foo/compliance_tests.git
+
+# check any module for compliance with your tests
+cd compliance_tests
+puppet_comply check --forge puppetlabs/ntp # or specify --git git url, branch, tag, ... something
+```
+
+Uses [librarian-puppet](https://github.com/voxpupuli/librarian-puppet) to resolve and install dependencies declared in metadata.json from the Puppet Forge.
+
 
 ## Development
 
