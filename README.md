@@ -4,7 +4,7 @@
 
 This is a work in progress and will probably cause you to burst into flames. Use at your own risk.
 
-This gem seeks to provide a mechamism to test arbritrary Puppet modules for compliance against some security spec.
+This gem seeks to provide a mechamism to test arbritrary Puppet modules for compliance against some security spec. The modules under test must contain rspec tests for this gem to inject the rspec shared examples into.
 
 ## Installation
 
