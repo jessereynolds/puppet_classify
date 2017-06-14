@@ -12,44 +12,34 @@ require 'puppet_forge'
 
 module PuppetComply
   module Check
-    def self.run(opts)
-      self.download_module(forge)
-      self.download_dependencies
+    def self.run(forge_module:)
+      self.download_forge_module(forge_module)
+      self.execute_rspec(self.module_path(forge_module))
     end
 
-    def self.download_module
-
+    def self.download_forge_module(forge_module)
       modules_dir = File.join(Dir.pwd, 'modules')
       unless File.exist?(modules_dir)
         Dir.mkdir(modules_dir)
       end
 
-      release_slug = "puppetlabs-apache-1.6.0"
-      release_tarball = release_slug + ".tar.gz"
-      dest_dir = File.join(modules_dir, 'apache')
-      tmp_dir = File.join(Dir.pwd, 'tmp')
-      unless File.exist?(tmp_dir)
-        Dir.mkdir(tmp_dir)
-      end
-
-      # Fetch Release information from API
-      # @raise Faraday::ResourceNotFound error if the given release does not exist
-      release = PuppetForge::Release.find release_slug
-
-      # Download the Release tarball
-      # @raise PuppetForge::ReleaseNotFound error if the given release does not exist
-      release.download(Pathname(release_tarball))
-
-      # Verify the MD5
-      # @raise PuppetForge::V3::Release::ChecksumMismatch error if the file's md5 does not match the API information
-      release.verify(Pathname(release_tarball))
-
-      # Unpack the files to a given directory
-      # @raise RuntimeError if it fails to extract the contents of the release tarball
-      PuppetForge::Unpacker.unpack(release_tarball, dest_dir, tmp_dir)
+      system("bundle exec puppet module install #{forge_module} --target-dir #{modules_dir}")
     end
 
-    def self.download_dependencies
+    def self.module_path(forge_module)
+      File.join(Dir.pwd, 'modules', forge_module.split(/[\/-]/, 2).last)
+    end
+
+    def self.execute_rspec(module_path)
+      Dir.chdir(module_path) do
+        Bundler.with_clean_env do
+          if File.directory?('spec/fixtures/modules')
+            FileUtils.rm_rf('spec/fixtures/modules')
+          end
+          FileUtils.ln_s('../../../.', 'spec/fixtures/modules')
+          system('bundle install && bundle exec rake spec')
+        end
+      end
     end
 
   end

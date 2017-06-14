@@ -23,16 +23,16 @@ Escort::App.create do |app|
     command.summary "Perform checks"
     command.description "write more detail here"
     command.options do |opts|
-      opts.opt(:forge,
+      opts.opt(:forge_module,
                'Specify a forge module to test, eg puppetlabs/apache',
-               :long => '--forge',
+               :long => '--forge-module',
                :type => :string,
                :default => nil,
               )
     end
     command.action do |options, arguments|
-      forge = options[:global][:commands][:check][:options][:forge]
-      PuppetComply::Check.run(forge: forge)
+      forge = options[:global][:commands][:check][:options][:forge_module]
+      PuppetComply::Check.run(forge_module: forge)
 
       # PDQTest::Emoji.disable(options[:global][:options][:disable_emoji])
       #

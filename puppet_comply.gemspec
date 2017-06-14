@@ -27,4 +27,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "escort", "0.4.0"
   spec.add_runtime_dependency "puppet_forge"
   spec.add_runtime_dependency "librarian-puppet"
+  spec.add_runtime_dependency "puppet"
 end
