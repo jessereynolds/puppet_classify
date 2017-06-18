@@ -8,6 +8,8 @@
 # run rspec tests in the module, inserting our shared examples into their context
 #
 
+# this is amazingly ripe for refactoring
+#
 require 'puppet_forge'
 
 module PuppetComply
